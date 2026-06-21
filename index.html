@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مُعِينْ - مجمع حلقات الإمام الشاطبي</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Amiri:ital,wght@1,700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --neon-green: #00ff87;
+            --neon-blue: #60efff;
+            --card-bg: #161b22;
+            --text-color: #f0f6fc;
+            --text-muted: #8b949e;
+            --shadow-light: rgba(255, 255, 255, 0.03);
+            --shadow-dark: rgba(0, 0, 0, 0.6);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* إضافة حركة النبض */
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(0.97); } 100% { transform: scale(1); } }
+        .neon-btn:active, .action-btn:active { animation: pulse 0.3s ease; }
+
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .app-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 10px;
+        }
+
+        /* تكبير الشعار */
+        .app-logo {
+            height: 130px;
+            width: auto;
+            margin-bottom: 15px;
+            object-fit: contain;
+        }
+
+        .mجمع-title {
+            font-size: 11pt;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .app-title-main {
+            font-size: 26pt;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(0, 255, 135, 0.3);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .neon-btn {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 20px 10px;
+            font-size: 11pt;
+            font-weight: 700;
+            color: var(--text-color);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 4px 4px 10px var(--shadow-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100px;
+        }
+
+        .neon-btn.active-feature {
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+            box-shadow: 0 0 15px rgba(0, 255, 135, 0.2), 4px 4px 15px var(--shadow-dark);
+        }
+
+        .neon-btn.disabled-feature {
+            color: var(--text-muted);
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* انتقالات الصفحات */
+        .app-page {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: 100vh;
+            background: var(--bg-color);
+            padding: 20px;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .app-page.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .back-btn {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--neon-blue);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 11pt;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+        }
+
+        .custom-select, .custom-input {
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            padding: 14px;
+            font-size: 12pt;
+            border-radius: 15px;
+            outline: none;
+            font-weight: 600;
+        }
+
+        .stats-summary-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 25px 0;
+        }
+
+        .stat-box-3d {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 15px 5px;
+            text-align: center;
+            box-shadow: 4px 4px 10px var(--shadow-dark);
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .stat-box-3d .title {
+            font-size: 9pt;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .stat-box-3d .val {
+            font-size: 14pt;
+            font-weight: 800;
+            color: var(--neon-green);
+        }
+
+        .action-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #00ff87, #60efff);
+            color: #000000;
+            border: none;
+            padding: 16px;
+            font-size: 12pt;
+            font-weight: 800;
+            border-radius: 15px;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(0, 255, 135, 0.3);
+        }
+
+        .history-title {
+            font-size: 12pt;
+            font-weight: 700;
+            margin: 30px 0 15px 0;
+            color: #ffffff;
+        }
+
+        .history-list {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 10px;
+            box-shadow: inset 2px 2px 5px var(--shadow-dark);
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            padding: 12px 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 10pt;
+            text-align: center;
+        }
+
+        .history-item .day-num {
+            color: var(--neon-blue);
+            font-weight: 700;
+            text-align: right;
+        }
+
+        /* ------------------ قالب الصورة التقريرية ------------------ */
+        #image-template-wrapper { 
+            position: absolute;
+            left: -9999px;
+            top: -9999px;
+            display: block; 
+        }
+
+        .report-card {
+            width: 500px; 
+            background: #ffffff;
+            color: #111111;
+            padding: 30px;
+            direction: rtl;
+        }
+
+        .rep-header {
+            text-align: center;
+            border-bottom: 3px solid #16a085;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .rep-logo {
+            height: 120px;
+            width: auto;
+            margin-bottom: 15px;
+            object-fit: contain;
+        }
+
+        /* بسملة جميلة */
+        .rep-basmala {
+            font-family: 'Amiri', serif;
+            font-size: 28pt;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .rep-mجمع {
+            font-size: 12pt;
+            font-weight: 800;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        .rep-title {
+            font-size: 20pt;
+            font-weight: 800;
+            color: #16a085;
+            margin: 15px 0 10px 0;
+        }
+
+        .rep-day-subtitle {
+            font-size: 14pt;
+            font-weight: 800;
+            background: #eef9f5;
+            padding: 6px 20px;
+            border-radius: 8px;
+            display: inline-block;
+            border-right: 5px solid #16a085;
+            color: #111111;
+        }
+
+        .rep-blocks {
+            display: flex;
+            justify-content: space-between;
+            margin: 25px 0;
+        }
+
+        .rep-block {
+            width: 31%;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 15px 5px;
+            text-align: center;
+        }
+
+        .rep-block .label {
+            font-size: 10pt;
+            color: #475569;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .rep-block .value {
+            font-size: 15pt;
+            font-weight: 800;
+            color: #111111;
+        }
+
+        .rep-section-title {
+            font-size: 12pt;
+            font-weight: 800;
+            color: #1e293b;
+            margin: 20px 0 12px 0;
+            border-right: 4px solid #16a085;
+            padding-right: 8px;
+            text-align: right;
+        }
+
+        .rep-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .rep-table th {
+            background-color: #f1f5f9;
+            color: #1e293b;
+            font-weight: 700;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            font-size: 11pt;
+        }
+
+        .rep-table td {
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            text-align: center;
+            font-size: 11pt;
+            color: #334155;
+        }
+
+        .rep-table tr:nth-child(even) td {
+            background-color: #f8fafc;
+        }
+
+        .rep-footer {
+            text-align: center;
+            font-size: 10pt;
+            font-weight: 700;
+            color: #16a085;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 15px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container" id="main-screen">
+        <div class="app-header">
+            <img src="sss.png" alt="شعار الشاطبي" class="app-logo">
+            <div class="mجمع-title">مجمع حلقات الإمام الشاطبي لتحفيظ القرآن الكريم</div>
+            <div class="app-title-main">مُعِينْ</div>
+        </div>
+        <div class="menu-grid">
+            <button class="neon-btn active-feature" onclick="navigateTo('stats-page')">احصاء اليوم القرآني</button>
+            <button class="neon-btn disabled-feature">قريباً...</button>
+            <button class="neon-btn disabled-feature">قريباً...</button>
+            <button class="neon-btn disabled-feature">قريباً...</button>
+        </div>
+    </div>
+
+    <div class="app-page" id="stats-page">
+        <div class="page-header">
+            <button class="back-btn" onclick="navigateTo('main-screen')">رجوع</button>
+            <h2 style="font-size: 13pt; font-weight: 800;">إحصاء اليوم القرآني</h2>
+            <div style="width: 50px;"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">رقم اليوم القرآني</label>
+            <select id="day-number" class="custom-select" onchange="updateLiveCards()"></select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">عدد الأجزاء التي تم مراجعتها</label>
+            <select id="parts-count" class="custom-select" onchange="calculateFaces()"></select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">عدد الأوجه (تلقائي وقابل للتعديل)</label>
+            <input type="number" id="faces-count" class="custom-input" oninput="updateLiveCards()">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">عدد الأشخاص</label>
+            <select id="people-count" class="custom-select" onchange="updateLiveCards()"></select>
+        </div>
+
+        <div class="stats-summary-row">
+            <div class="stat-box-3d">
+                <div class="title">عدد الأجزاء</div>
+                <div class="val" id="card-parts">0</div>
+            </div>
+            <div class="stat-box-3d">
+                <div class="title">عدد الأوجه</div>
+                <div class="val" id="card-faces">0</div>
+            </div>
+            <div class="stat-box-3d">
+                <div class="title">عدد الأشخاص</div>
+                <div class="val" id="card-people">0</div>
+            </div>
+        </div>
+
+        <button class="action-btn" onclick="saveAndGenerateImage()">حفظ البيانات وإصدار التقرير كصورة</button>
+
+        <div class="history-title">إحصائيات الأيام السابقة (آخر 10 أيام)</div>
+        <div class="history-list" id="history-container"></div>
+    </div>
+
+    <div id="image-template-wrapper">
+        <div class="report-card" id="report-target">
+            <div class="rep-header">
+                <img src="ssss.jpg" alt="شعار الشاطبي" class="rep-logo">
+                <div class="rep-basmala">﷽</div>
+                <div class="rep-mجمع">
+                    مجمع حلقات الإمام الشاطبي لتحفيظ القرآن الكريم<br>
+                    في<br>
+                    جامع آل مـفـيـز بالعياف
+                </div>
+                <div class="rep-title">التقرير الإحصائي اليومي</div>
+                <div class="rep-day-subtitle" id="rep-day-label">اليوم القرآني</div>
+            </div>
+
+            <div class="rep-blocks">
+                <div class="rep-block">
+                    <div class="label">عدد الأجزاء المراجعة</div>
+                    <div class="value" id="rep-val-parts">0 جزء</div>
+                </div>
+                <div class="rep-block">
+                    <div class="label">عدد الأوجه الإجمالي</div>
+                    <div class="value" id="rep-val-faces">0 وجه</div>
+                </div>
+                <div class="rep-block">
+                    <div class="label">عدد المشاركين</div>
+                    <div class="value" id="rep-val-people">0 مشارك</div>
+                </div>
+            </div>
+
+            <div class="rep-section-title">إحصائيات الأيام السابقة</div>
+            <table class="rep-table">
+                <thead>
+                    <tr>
+                        <th>رقم اليوم</th>
+                        <th>عدد الأجزاء</th>
+                        <th>عدد المشاركين</th>
+                    </tr>
+                </thead>
+                <tbody id="rep-table-body"></tbody>
+            </table>
+
+            <div class="rep-footer" id="rep-date-stamp">
+                مجمع حلقات الإمام الشاطبي
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const initialHistory = [
+            { day: 29, parts: 112, people: 20 },
+            { day: 30, parts: 111, people: 18 },
+            { day: 31, parts: 122, people: 21 },
+            { day: 32, parts: 126, people: 21 },
+            { day: 33, parts: 113, people: 20 },
+            { day: 34, parts: 154, people: 21 },
+            { day: 35, parts: 90,  people: 17 },
+            { day: 36, parts: 194, people: 23 },
+            { day: 37, parts: 140, people: 19 },
+            { day: 38, parts: 116, people: 17 }
+        ];
+
+        let historyData = JSON.parse(localStorage.getItem('shatibi_db')) || initialHistory;
+
+        function getDayText(num) {
+            const map = {
+                1: "الأول", 2: "الثاني", 3: "الثالث", 4: "الرابع", 5: "الخامس", 6: "السادس", 7: "السابع", 8: "الثامن", 9: "التاسع", 10: "العاشر",
+                11: "الحادي عشر", 12: "الثاني عشر", 13: "الثالث عشر", 14: "الرابع عشر", 15: "الخامس عشر", 16: "السادس عشر", 17: "السابع عشر", 18: "الثامن عشر", 19: "التاسع عشر",
+                20: "العشرون", 21: "الحادي والعشرون", 22: "الثاني والعشرون", 23: "الثالث والعشرون", 24: "الرابع والعشرون", 25: "الخامس والعشرون", 26: "السادس والعشرون", 27: "السابع والعشرون", 28: "الثامن والعشرون", 29: "التاسع والعشرون",
+                30: "الثلاثون", 31: "الحادي والثلاثون", 32: "الثاني والثلاثون", 33: "الثالث والثلاثون", 34: "الرابع والثلاثون", 35: "الخامس والثلاثون", 36: "السادس والثلاثون", 37: "السابع والثلاثون", 38: "الثامن والثلاثون", 39: "التاسع والثلاثون",
+                40: "الأربعون", 50: "الخمسون"
+            };
+            return map[num] || ("اليوم " + num);
+        }
+
+        function initDropdowns() {
+            const daySelect = document.getElementById('day-number');
+            const partsSelect = document.getElementById('parts-count');
+            const peopleSelect = document.getElementById('people-count');
+
+            for(let i = 1; i <= 100; i++) {
+                let opt = document.createElement('option');
+                opt.value = i; opt.textContent = "اليوم القرآني " + i;
+                if(i === 39) opt.selected = true; 
+                daySelect.appendChild(opt);
+            }
+            for(let i = 0; i <= 500; i++) {
+                let opt = document.createElement('option');
+                opt.value = i; opt.textContent = i + " جزء";
+                if(i === 120) opt.selected = true;
+                partsSelect.appendChild(opt);
+            }
+            for(let i = 0; i <= 200; i++) {
+                let opt = document.createElement('option');
+                opt.value = i; opt.textContent = i + " مشارك";
+                if(i === 20) opt.selected = true;
+                peopleSelect.appendChild(opt);
+            }
+        }
+
+        function navigateTo(pageId) {
+            document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
+            document.getElementById('main-screen').style.display = 'none';
+            if(pageId === 'main-screen') {
+                document.getElementById('main-screen').style.display = 'flex';
+            } else {
+                const page = document.getElementById(pageId);
+                page.style.display = 'block';
+                setTimeout(() => page.classList.add('active'), 10);
+            }
+        }
+
+        function calculateFaces() {
+            const parts = parseInt(document.getElementById('parts-count').value) || 0;
+            document.getElementById('faces-count').value = parts * 20;
+            updateLiveCards();
+        }
+
+        function updateLiveCards() {
+            document.getElementById('card-parts').textContent = document.getElementById('parts-count').value;
+            document.getElementById('card-faces').textContent = document.getElementById('faces-count').value || 0;
+            document.getElementById('card-people').textContent = document.getElementById('people-count').value;
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('history-container');
+            container.innerHTML = '';
+            let sorted = [...historyData].sort((a,b) => b.day - a.day).slice(0, 10);
+            sorted.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'history-item';
+                row.innerHTML = `
+                    <div class="day-num">اليوم ${item.day}</div>
+                    <div>${item.parts} جزء</div>
+                    <div>${item.people} مشارك</div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function saveAndGenerateImage() {
+            const dayNum = parseInt(document.getElementById('day-number').value);
+            const parts = parseInt(document.getElementById('parts-count').value) || 0;
+            const faces = parseInt(document.getElementById('faces-count').value) || 0;
+            const people = parseInt(document.getElementById('people-count').value) || 0;
+
+            const existingIdx = historyData.findIndex(h => h.day === dayNum);
+            if(existingIdx > -1) {
+                historyData[existingIdx] = { day: dayNum, parts, people };
+            } else {
+                historyData.push({ day: dayNum, parts, people });
+            }
+            localStorage.setItem('shatibi_db', JSON.stringify(historyData));
+            renderHistory();
+
+            const dayText = getDayText(dayNum);
+            document.getElementById('rep-day-label').textContent = "اليوم القرآني " + dayText;
+            
+            document.getElementById('rep-val-parts').innerHTML = parts + "&nbsp;&nbsp;جزء";
+            document.getElementById('rep-val-faces').innerHTML = faces + "&nbsp;&nbsp;وجه";
+            document.getElementById('rep-val-people').innerHTML = people + "&nbsp;&nbsp;مشارك";
+
+            const tableBody = document.getElementById('rep-table-body');
+            tableBody.innerHTML = '';
+            let last10 = [...historyData].sort((a,b) => b.day - a.day).slice(0, 10);
+            last10.forEach(item => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `<td>اليوم&nbsp;${item.day}</td><td>${item.parts}&nbsp;جزء</td><td>${item.people}&nbsp;مشارك</td>`;
+                tableBody.appendChild(tr);
+            });
+
+            const optionsDate = { year: 'numeric', month: 'long', day: 'numeric' };
+            const todayStr = new Date().toLocaleDateString('ar-SA', optionsDate);
+            document.getElementById('rep-date-stamp').innerHTML = "تم إصدار التقرير بتاريخ: " + todayStr + " م";
+
+            const targetElement = document.getElementById('report-target');
+            
+            setTimeout(() => {
+                html2canvas(targetElement, {
+                    scale: 2, 
+                    useCORS: true,
+                    backgroundColor: "#ffffff"
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = `تقرير_اليوم_القرآني_${dayNum}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                });
+            }, 300);
+        }
+
+        window.onload = function() {
+            initDropdowns();
+            calculateFaces();
+            renderHistory();
+        };
+    </script>
+</body>
+</html>
